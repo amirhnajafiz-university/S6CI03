@@ -1,8 +1,14 @@
 import numpy as np
 
 
-class NeuralNetwork:
 
+"""
+Neural Network class
+"""
+class NeuralNetwork:
+    """
+    constructor
+    """
     def __init__(self, *args, **kwargs):
         """
         Neural Network initialization.
@@ -13,7 +19,9 @@ class NeuralNetwork:
         3 neurons in the input layer, 10 neurons in the hidden layer, and 2 neurons in the output layer.
         """
         # TODO (Implement FCNNs architecture here)
+        # getting the layer sizes
         self.layer_sizes = kwargs.get('layer_sizes')
+        # initializing the parameters
         self.parameters = self.initialize_parameters_deep()
 
     @staticmethod
@@ -24,6 +32,7 @@ class NeuralNetwork:
         :return: Vector after applying activation function.
         """
         # TODO (Implement activation function here)
+        # sigmoid activation function
         return 1.0 / (1 + np.exp(-x))
 
     def forward(self, x):
@@ -32,28 +41,37 @@ class NeuralNetwork:
         :param x: Input vector which is a numpy array.
         :return: Output vector
         """
+        # get a copy of x
         a = x
+        # calculate the deepness
         deepness = len(self.parameters) // 2
 
+        # doing feedforward for each layer
         for le in range(1, deepness):
             a_prev = a
+            # using our linear activation forward
             a = self.linear_activation_forward(a_prev, self.parameters['W' + str(le)], self.parameters['b' + str(le)])
 
+        # last layer
         al = self.linear_activation_forward(a, self.parameters['W' + str(deepness)],
                                             self.parameters['b' + str(deepness)])
 
         return al
 
+    """
+    using the activation function to perform a forwarding in
+    feedforward steps.
+    """
     def linear_activation_forward(self, a_prev, w, b):
-        z = (w @ a_prev) + b
-        a = self.activation(z)
-        return a
+        return self.activation((w @ a_prev) + b)
 
+    """
+    this method sets the parameters of our network.
+    """
     def initialize_parameters_deep(self):
         parameters = {}
-        deepness = len(self.layer_sizes)  # number of layers in the network
 
-        for le in range(1, deepness):
+        for le in range(1, len(self.layer_sizes)):  # number of layers in the network
             parameters['W' + str(le)] = np.random.normal(size=(self.layer_sizes[le], self.layer_sizes[le - 1]))
             parameters['b' + str(le)] = np.zeros((self.layer_sizes[le], 1))
 
