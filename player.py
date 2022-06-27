@@ -6,6 +6,7 @@ from variables import global_variables
 from nn import NeuralNetwork
 
 
+
 class Player(pygame.sprite.Sprite):
     def __init__(self, game_mode):
         super().__init__()
@@ -33,9 +34,11 @@ class Player(pygame.sprite.Sprite):
         self.gravity = 10
         self.game_mode = game_mode
 
+        # choosing game mode
         if self.game_mode == "Neuroevolution":
             self.fitness = 0  # Initial fitness
 
+            # default layer size
             layer_sizes = [6, 14, 2]
             self.nn = NeuralNetwork(layer_sizes=layer_sizes)
 
@@ -53,17 +56,15 @@ class Player(pygame.sprite.Sprite):
         :param player_y: 'y' position of the player
         """
         # TODO (change player's gravity here by calling self.change_gravity)
+        # using the generate input layer function
+        # to create the inputs.
         inp = self.generate_input_layer(screen_width, screen_height, obstacles, player_x, player_y)
+        
         output = self.nn.forward(inp)
         if output[0] >= output[1]:
             self.change_gravity('left')
         else:
             self.change_gravity('right')
-        # This is a test code that changes the gravity based on a random number. Remove it before your implementation.
-        # if random.randint(0, 2):
-        #     self.change_gravity('left')
-        # else:
-        #     self.change_gravity('right')
 
     def change_gravity(self, new_gravity):
         """
@@ -136,12 +137,18 @@ class Player(pygame.sprite.Sprite):
         for i, player_surface in enumerate(self.player_walk):
             self.player_walk[i] = pygame.transform.flip(player_surface, flip_x=True, flip_y=False)
 
+    """
+    this mehtod is used to create input layer.
+    """
     def generate_input_layer(self, screen_width, screen_height, obstacles, player_x, player_y):
         param = np.zeros((self.nn.layer_sizes[0], 1))
+
         for i in range(min(len(obstacles), self.nn.layer_sizes[0] // 2)):
             param[i * 2] = np.exp(self.nn.layer_sizes[0] - i) * (abs(obstacles[i]['x'] - player_x)) / screen_width
             param[i * 2 + 1] = (player_y - obstacles[i]['y']) * np.exp(self.nn.layer_sizes[0] - i) / screen_height
+        
         param = self.normalize(param)
+        
         return param
 
     @staticmethod
