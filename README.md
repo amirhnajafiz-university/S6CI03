@@ -3,7 +3,7 @@
 Snail jumper game with Neural Networks and Generic Algorithm.
 
 <p align="center">
-    <img src="SnailJumper.png" width="700" />
+    <img src="assets/SnailJumper.png" width="700" />
 </p>
 
 In this project we are going to play the Jumping Snail game with 
