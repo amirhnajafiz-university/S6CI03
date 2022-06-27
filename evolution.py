@@ -86,6 +86,7 @@ class Evolution:
         # based on the type of selection, choose
         if type_of_selection == 'sort':
             copy_players.sort(key=get_fitness, reverse=True)
+
             ret = copy_players
         if type_of_selection == 'roulette wheel':
             ret = self.roulette_wheel(copy_players, num_players)

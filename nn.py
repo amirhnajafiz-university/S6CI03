@@ -41,22 +41,15 @@ class NeuralNetwork:
         :param x: Input vector which is a numpy array.
         :return: Output vector
         """
-        # get a copy of x
-        a = x
         # calculate the deepness
         deepness = len(self.parameters) // 2
 
         # doing feedforward for each layer
-        for le in range(1, deepness):
-            a_prev = a
-            # using our linear activation forward
-            a = self.linear_activation_forward(a_prev, self.parameters['W' + str(le)], self.parameters['b' + str(le)])
+        for le in range(1, deepness):  # using our linear activation forward
+            x = self.linear_activation_forward(x, self.parameters['W' + str(le)], self.parameters['b' + str(le)])
 
         # last layer
-        al = self.linear_activation_forward(a, self.parameters['W' + str(deepness)],
-                                            self.parameters['b' + str(deepness)])
-
-        return al
+        return self.linear_activation_forward(x, self.parameters['W' + str(deepness)], self.parameters['b' + str(deepness)])
 
     """
     using the activation function to perform a forwarding in
