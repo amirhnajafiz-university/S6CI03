@@ -131,6 +131,7 @@ class Evolution:
             for iteration in range(num_players):
                 par_a, par_b = self.select_parents(prev_players, type_of_selection=type_of_selection)
                 child_a, child_b = self.generate_children(par_a, par_b)
+                
                 new_players.append(child_a)
                 new_players.append(child_b)
                 
