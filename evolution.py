@@ -9,6 +9,10 @@ from numpy import shape
 from player import Player
 
 
+
+"""
+getting the fitness of an element.
+"""
 def get_fitness(elem):
     return elem.fitness
 
@@ -75,8 +79,11 @@ class Evolution:
         :param players: list of players in the previous generation
         :param num_players: number of players that we return
         """
+        # copy the list of the players
         copy_players = [self.clone_player(player) for player in players]
         ret = copy_players
+        
+        # based on the type of selection, choose
         if type_of_selection == 'sort':
             copy_players.sort(key=get_fitness, reverse=True)
             ret = copy_players
@@ -86,13 +93,18 @@ class Evolution:
             ret = self.sus(copy_players, num_players)
         elif type_of_selection == 'top-k':
             ret = self.top_k(copy_players, num_items=num_players, k=len(copy_players) // 2)
+        
+        # sorting based on the score
         temp = (sorted(ret, key=get_fitness, reverse=True))
         sm_fitness = sum([pl.fitness for pl in ret])
+        
+        # write
         if self.write:
             file_to_write.write(',' + str([temp[0].fitness, temp[len(temp) - 1].fitness, sm_fitness / num_players]))
         else:
             file_to_write.write(str([temp[0].fitness, temp[len(temp) - 1].fitness, sm_fitness / num_players]))
             self.write = True
+
         return ret
 
     def generate_new_population(self, num_players, prev_players=None, type_of_selection='random'):
@@ -105,18 +117,22 @@ class Evolution:
         :return: A list of children
         """
         first_generation = prev_players is None
+
         if first_generation:
             ret_players = [Player(self.game_mode) for _ in range(num_players)]
+            
             return ret_players
         else:
             print(str(max(prev_players, key=get_fitness).fitness) + '\n')
             # TODO ( Parent selection and child generation )
             new_players = []
+
             for iteration in range(num_players):
                 par_a, par_b = self.select_parents(prev_players, type_of_selection=type_of_selection)
                 child_a, child_b = self.generate_children(par_a, par_b)
                 new_players.append(child_a)
                 new_players.append(child_b)
+                
             return new_players
 
     def clone_player(self, player):
