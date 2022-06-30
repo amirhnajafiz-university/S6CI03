@@ -169,7 +169,7 @@ class Evolution:
         elif type_of_selection == 'SUS':
             par_a, par_b = self.sus(prev_players, 2)
         elif type_of_selection == 'top-k':
-            par_a, par_b = self.top_k(prev_players, 2, k=30)
+            par_a, par_b = self.top_k(prev_players, 2, k=25)
 
         return par_a, par_b
 
@@ -211,7 +211,7 @@ class Evolution:
     def mutate(child):
         for i in range(1, len(child.nn.layer_sizes)):
             val = randint(0, 100)
-            if val > 70:
+            if val > 90:
                 params = {'W': np.random.normal(size=(child.nn.layer_sizes[i], child.nn.layer_sizes[i - 1])),
                           'b': np.zeros((child.nn.layer_sizes[i], 1))}
                 child.nn.change_layer_parameters(new_layer_parameters=params, layer_num=i)
