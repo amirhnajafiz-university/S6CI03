@@ -18,7 +18,6 @@ class NeuralNetwork:
         :param layer_sizes: A list containing neuron numbers in each layers. For example [3, 10, 2] means that there are
         3 neurons in the input layer, 10 neurons in the hidden layer, and 2 neurons in the output layer.
         """
-        # TODO (Implement FCNNs architecture here)
         # getting the layer sizes
         self.layer_sizes = kwargs.get('layer_sizes')
         # initializing the parameters
@@ -31,7 +30,6 @@ class NeuralNetwork:
         :param x: Vector of a layer in our network.
         :return: Vector after applying activation function.
         """
-        # TODO (Implement activation function here)
         # sigmoid activation function
         return 1.0 / (1 + np.exp(-x))
 

@@ -139,7 +139,7 @@ class Evolution:
             return ret_players
         else:
             print(str(max(prev_players, key=get_fitness).fitness) + '\n')
-            # TODO ( Parent selection and child generation )
+            
             new_players = []
 
             for iteration in range(num_players):
