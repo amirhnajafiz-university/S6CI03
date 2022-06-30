@@ -28,6 +28,9 @@ class Evolution:
         self.game_mode = "Neuroevolution"
         self.write = False
 
+    """
+    Roulette wheel  
+    """
     def roulette_wheel(self, items, num_items):
         probabilities = self.get_probability_list(items)
         chosen = []
@@ -41,6 +44,9 @@ class Evolution:
         
         return chosen
 
+    """
+    SUS
+    """
     def sus(self, items, num_items):
         points = self.generate_points(items, num_items)
         chosen = []
@@ -61,6 +67,9 @@ class Evolution:
 
         return chosen
 
+    """
+    Top-k
+    """
     def top_k(self, items, num_items, k=2):
         chosen = []
 
@@ -113,7 +122,7 @@ class Evolution:
         temp = (sorted(ret, key=get_fitness, reverse=True))
         sm_fitness = sum([pl.fitness for pl in ret])
         
-        # write
+        # write into histories file
         if self.write:
             file_to_write.write(',' + str([temp[0].fitness, temp[len(temp) - 1].fitness, sm_fitness / num_players]))
         else:
@@ -158,6 +167,7 @@ class Evolution:
         new_player = Player(self.game_mode)
         new_player.nn = copy.deepcopy(player.nn)
         new_player.fitness = player.fitness
+
         return new_player
 
     def select_parents(self, prev_players, type_of_selection='random'):
@@ -211,7 +221,7 @@ class Evolution:
     def mutate(child):
         for i in range(1, len(child.nn.layer_sizes)):
             val = randint(0, 100)
-            if val > 90:
+            if val > 80:
                 params = {'W': np.random.normal(size=(child.nn.layer_sizes[i], child.nn.layer_sizes[i - 1])),
                           'b': np.zeros((child.nn.layer_sizes[i], 1))}
                 child.nn.change_layer_parameters(new_layer_parameters=params, layer_num=i)

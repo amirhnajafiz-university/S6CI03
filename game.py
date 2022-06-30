@@ -1,3 +1,4 @@
+# python modules
 import copy
 import json
 from datetime import time, datetime
@@ -6,33 +7,47 @@ from sys import exit
 from numpy.random import randint, choice
 import numpy as np
 
+# internal modules
 from evolution import Evolution
 from player import Player
 from variables import global_variables
+
+# pygame
 import pygame
+
 
 
 def display_score():
     score = int((pygame.time.get_ticks() - start_time) / 100)
     score_surf = game_font.render(f"Score: {score}", False, (64, 64, 64))
     score_rect = score_surf.get_rect(center=(520, 50))
+    
     screen.blit(score_surf, score_rect)
+
     return score
 
 
 def display_best_score():
     score_surf = game_font.render(f"BScore: {best_score}", False, (64, 64, 64))
     score_rect = score_surf.get_rect(center=(520, 100))
+
     screen.blit(score_surf, score_rect)
 
 
 def display_generation():
     score_surf = small_game_font.render(f"Generation: {generation}", False, (64, 64, 64))
     score_rect = score_surf.get_rect(topleft=(8, 50))
+    
     screen.blit(score_surf, score_rect)
 
 
+"""
+obstacle class
+"""
 class Obstacle(pygame.sprite.Sprite):
+    """
+    constructor
+    """
     def __init__(self, obstacle_type, position=None):
         super().__init__()
 
@@ -100,12 +115,14 @@ def collision_sprite():
 def draw_intro_text(text, height, width=global_variables['screen_width'] // 2, color=(111, 196, 169)):
     message = game_font.render(text, False, color)
     message_rect = message.get_rect(center=(width, height))
+
     screen.blit(message, message_rect)
 
 
 def draw_btn(btn, btn_rect):
     pygame.draw.rect(screen, '#E8F3F1', btn_rect)
     pygame.draw.rect(screen, '#E8F3F1', btn_rect, 10)
+
     screen.blit(btn, btn_rect)
 
 
@@ -136,14 +153,19 @@ def reset_timer_and_seed():
     pygame.time.set_timer(fly_timer, 4750)
 
 
+# starting application
 if __name__ == '__main__':
     pygame.init()
+
     screen = pygame.display.set_mode((global_variables['screen_width'], global_variables['screen_height']))
     pygame.display.set_caption(global_variables['title'])
+
     clock = pygame.time.Clock()
     game_font = pygame.font.Font('Font/PixelType.ttf', 40)
     small_game_font = pygame.font.Font('Font/PixelType.ttf', 30)
     title_font = pygame.font.Font('Font/PixelType.ttf', 80)
+
+    # opening infor file for histories
     file = open('info.txt', 'w')
     file.write('[')
 
@@ -153,9 +175,11 @@ if __name__ == '__main__':
     game_mode = None
     start_time = 0
     best_score = 0
-    num_players = 150
-    next_gen_selection_type = 'SUS'  # (top-k, roulette wheel, SUS, sort)
+    num_players = 300
+
+    next_gen_selection_type = 'roulette wheel'  # (top-k, roulette wheel, SUS, sort)
     parent_selection_type = 'top-k'  # (top-k, roulette wheel, SUS, random)
+
     lst = []
 
     background_surface = pygame.image.load('Graphics/Background.jpg').convert()
@@ -193,8 +217,10 @@ if __name__ == '__main__':
     fly_timer = pygame.USEREVENT + 2
     # pygame.time.set_timer(fly_timer, 4750)
 
+    # game loop
     while True:
         global_variables['events'] = pygame.event.get()
+
         for event in global_variables['events']:
             if event.type == pygame.QUIT:
                 file.write(']')
@@ -221,9 +247,9 @@ if __name__ == '__main__':
                             create_players(mode=game_mode)
                         else:
                             game_mode = "Neuroevolution"
-                            current_players = evolution.generate_new_population(num_players,
-                                                                                type_of_selection=parent_selection_type)
+                            current_players = evolution.generate_new_population(num_players, type_of_selection=parent_selection_type)
                             prev_players = []
+                            
                             create_players(mode=game_mode, player_list=current_players)
                     if clicked_exit_btn:
                         file.write(']')
@@ -255,6 +281,7 @@ if __name__ == '__main__':
                                                                         type_of_selection=parent_selection_type)
                     reset_timer_and_seed()
                     create_players(game_mode, player_list=prev_players + current_players)
+                    
                     generation += 1
                     start_time = pygame.time.get_ticks()
 

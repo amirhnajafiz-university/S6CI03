@@ -2,6 +2,7 @@ import random
 
 import numpy as np
 import pygame
+
 from variables import global_variables
 from nn import NeuralNetwork
 
