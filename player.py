@@ -55,7 +55,6 @@ class Player(pygame.sprite.Sprite):
         :param player_x: 'x' position of the player
         :param player_y: 'y' position of the player
         """
-        # TODO (change player's gravity here by calling self.change_gravity)
         # using the generate input layer function
         # to create the inputs.
         inp = self.generate_input_layer(screen_width, screen_height, obstacles, player_x, player_y)
@@ -155,6 +154,8 @@ class Player(pygame.sprite.Sprite):
     def normalize(param):
         var = np.var(param)
         mean = np.mean(param)
+
         sqrt_var = np.sqrt(var)
         param = (param - mean) / sqrt_var if sqrt_var != 0 else np.zeros((len(param), 1))
+        
         return param
