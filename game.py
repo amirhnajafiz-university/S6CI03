@@ -155,7 +155,7 @@ if __name__ == '__main__':
     best_score = 0
     num_players = 150
     next_gen_selection_type = 'SUS'  # (top-k, roulette wheel, SUS, sort)
-    parent_selection_type = 'roulette wheel'  # (top-k, roulette wheel, SUS, random)
+    parent_selection_type = 'top-k'  # (top-k, roulette wheel, SUS, random)
     lst = []
 
     background_surface = pygame.image.load('Graphics/Background.jpg').convert()

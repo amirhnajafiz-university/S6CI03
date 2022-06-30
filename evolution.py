@@ -17,7 +17,13 @@ def get_fitness(elem):
     return elem.fitness
 
 
+"""
+evolution class
+"""
 class Evolution:
+    """
+    constructor
+    """
     def __init__(self):
         self.game_mode = "Neuroevolution"
         self.write = False
@@ -25,17 +31,20 @@ class Evolution:
     def roulette_wheel(self, items, num_items):
         probabilities = self.get_probability_list(items)
         chosen = []
+
         for n in range(num_items):
             r = random.random()
             for (i, individual) in enumerate(items):
                 if r <= probabilities[i]:
                     chosen.append(individual)
                     break
+        
         return chosen
 
     def sus(self, items, num_items):
         points = self.generate_points(items, num_items)
         chosen = []
+
         while len(chosen) < num_items:
             random.shuffle(items)
             i = 0
@@ -49,10 +58,12 @@ class Evolution:
                         break
                     j += 1
                 i += 1
+
         return chosen
 
     def top_k(self, items, num_items, k=2):
         chosen = []
+
         for iteration in range(num_items):
             best = None
             for i in range(k):
@@ -60,14 +71,17 @@ class Evolution:
                 if best is None or (items[r].fitness > items[best].fitness):
                     best = r
             chosen.append(items[best])
+
         return chosen
 
     @staticmethod
     def generate_points(items, num_items):
         total_fitness = float(sum([item.fitness for item in items]))
         point_distance = total_fitness / num_items
+
         start_point = random.uniform(0, point_distance)
         points = [start_point + i * point_distance for i in range(num_items)]
+
         return points
 
     def next_population_selection(self, players, num_players, file_to_write, type_of_selection='sort'):
@@ -149,18 +163,22 @@ class Evolution:
     def select_parents(self, prev_players, type_of_selection='random'):
         par_a = choice(prev_players)
         par_b = choice(prev_players)
+
         if type_of_selection == 'roulette wheel':
             par_a, par_b = self.roulette_wheel(prev_players, 2)
         elif type_of_selection == 'SUS':
             par_a, par_b = self.sus(prev_players, 2)
         elif type_of_selection == 'top-k':
-            par_a, par_b = self.top_k(prev_players, 2, k=20)
+            par_a, par_b = self.top_k(prev_players, 2, k=30)
+
         return par_a, par_b
 
     def generate_children(self, par_a, par_b):
         value = randint(0, len(par_a.nn.layer_sizes) - 1)
+
         child_a = self.clone_player(par_a)
         child_b = self.clone_player(par_b)
+
         for i in range(len(par_a.nn.layer_sizes) - 1):
             num = i + 1
             shape_1 = par_a.nn.layer_sizes[i + 1]
@@ -180,10 +198,13 @@ class Evolution:
 
             child_a.nn.change_layer_parameters(new_layer_parameters=params_a, layer_num=num)
             child_b.nn.change_layer_parameters(new_layer_parameters=params_b, layer_num=num)
+
         child_a.fitness = 0
         child_b.fitness = 0
+
         self.mutate(child_a)
         self.mutate(child_b)
+
         return child_a, child_b
 
     @staticmethod
@@ -199,7 +220,10 @@ class Evolution:
     def get_probability_list(items):
         fitness = [item.fitness for item in items]
         total_fit = float(sum(fitness))
+
         relative_fitness = [f / total_fit for f in fitness]
+
         probabilities = [sum(relative_fitness[:i + 1])
                          for i in range(len(relative_fitness))]
+
         return probabilities
