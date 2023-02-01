@@ -1,4 +1,8 @@
-# Neuroevolution Game
+<h1 align="center">
+    S6CI03
+</h1>
+
+<br />
 
 Snail jumper game with Neural Networks and Generic Algorithm.
 
